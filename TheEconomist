@@ -1,0 +1,46 @@
+library(ggplot2)
+library(tidyverse)
+library(ggrepel)
+library(ggthemes)
+library(extrafont)
+library(grid)
+library(cowplot)
+test_results = read_csv(file="/Users/Sadia/Desktop/Economist_data.csv")
+graph1 <-  ggplot(test_results, aes (x=CPI, y=HDI))
+
+graph1 + geom_point(aes(color = Region))
+g2 <- graph1 + geom_point(aes(color = Region),
+                          shape=21, 
+                          fill= "White",
+                          size =3, 
+                          stroke=1.5)
+
+
+ggdraw(g2)
+g2 + geom_smooth(method = "lm", 
+                 formula = y ~log(x))
+g2 + geom_smooth(method = "lm",
+                 formula = y ~log(x), 
+                 se=FALSE)
+g3 <- g2 + geom_smooth(aes(fill="red"),method = "lm", 
+                       formula = y ~log(x),
+                       se=FALSE, 
+                       linetype=1 , 
+                       color= "Red") 
+
+ggdraw(g3)
+#g3 + geom_text(aes(label = Country))
+g4 <- g3+ ggtitle("Corruption and human development\n") + 
+  theme(plot.title = element_text(hjust = -0.15, 
+                                  vjust=2.12, 
+                                  colour="black",
+                                  size = 14,
+                                  face="bold"))
+ggdraw(g4)
+
+g5 <-  add_sub(g4,"Source:Transparency International; UN Human Development report",
+                x = -0.07,
+                hjust = 0,
+                fontface = "plain",
+                size= 10) 
+ggdraw(g5)
